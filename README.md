@@ -130,7 +130,7 @@ Sinta-se à vontade para abrir issues, sugerir melhorias ou enviar PRs.
 
 ## 📄 Licença
 
-MIT © [Thalon Brito](https://github.com/thalonbr)
+MIT © [Vittor Duarte](https://github.com/thalonbr)
 
 ---
 
