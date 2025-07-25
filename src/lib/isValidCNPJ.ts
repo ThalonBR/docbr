@@ -1,7 +1,7 @@
 import { fillStringWithZero, parseCharacterToNumber } from "../utils/string.utils"
 
 function calculateCNPJDigit(cnpjBase: string){
-if(cnpjBase.length !== 12 || !/^\d{12}$/.test(cnpjBase)) return null
+if(cnpjBase.length !== 12) return null
 
 const pesosDV1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 const pesosDV2 = [6, ...pesosDV1]
@@ -24,7 +24,7 @@ return `${firstCheckedDigit}${secondCheckedDigit}`
  * @param cnpj - string contendo cnpj numérico ou alfanumérico
  * @returns boolean indicando validade do CNPJ
  */
-export function isCNPJValid(cnpj: string) {
+export function isValidCNPJ(cnpj: string) {
     let parsedCNPJ = ''
     
     if(!cnpj) throw new Error('Forneça um CNPJ')
