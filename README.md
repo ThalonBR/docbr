@@ -1,146 +1,160 @@
-# 📜 @thalonbr/docbr
+# 📄 @thalonbr/docbr
 
-Validador completo de documentos brasileiros (CPF e CNPJ), com suporte a entradas **numéricas**, **formatadas** e **alfanuméricas**.
-
-Desenvolvido com **TypeScript**, oferece tipagem forte, sem dependências externas e preparado para o futuro padrão de CNPJ com letras.
+Uma biblioteca leve e moderna para **validação de documentos brasileiros** (CPF e CNPJ), com suporte total a **CNPJ alfanumérico**, conforme especificações da Receita Federal para 2026.
 
 ---
 
-## ⚠️ Aviso importante
+## ✨ Recursos
 
-📅 A partir de **26 de julho de 2026**, a Receita Federal permitirá **CNPJs com valores alfanuméricos** para novos cadastros.  
-Esta biblioteca **já está preparada** para lidar com esse novo formato de CNPJ.
+- ✅ Validação precisa de **CPF**
+- ✅ Validação de **CNPJ numérico**
+- ✅ Validação de **CNPJ alfanumérico** (compatível com o novo formato válido a partir de **26 de julho de 2026**)
+- ✅ Preenchimento automático de zeros à esquerda, se necessário
+- ✅ Código limpo, modular e com mensagens de erro claras
 
 ---
 
 ## 🚀 Instalação
 
-\`\`\`bash
+```bash
 npm install @thalonbr/docbr
-\`\`\`
+```
 
 ou
 
-\`\`\`bash
+```bash
 yarn add @thalonbr/docbr
-\`\`\`
+```
 
 ---
 
-## ✨ Funcionalidades
+## 🛠️ Uso
 
-- ✅ Validação precisa de **CPF**
-- ✅ Validação de **CNPJ**, incluindo:
-  - Números puros (\`11222333000181\`)
-  - Formatado (\`11.222.333/0001-81\`)
-  - Alfanumérico (\`AB122333000181\`) ✅
-- ✅ Escrita 100% em **TypeScript**
-- ✅ Tipagem estática e segura
-- ✅ Preenchimento automático de zeros
-- ✅ Validação por **dígitos verificadores**
+### ✅ Validação de CPF
 
----
+```ts
+import { isValidCPF } from '@thalonbr/docbr'
 
-## 📦 Uso
+const cpf1 = '123.456.789-09'
+const cpf2 = '11144477735'
 
-\`\`\`ts
-import { isValidCPF, isCNPJValid } from '@thalonbr/docbr';
-\`\`\`
+console.log(isValidCPF(cpf1)) // false
+console.log(isValidCPF(cpf2)) // true
+```
 
-### ✅ Validar CPF
+### ✅ Validação de CNPJ numérico
 
-\`\`\`ts
-isValidCPF('123.456.789-09'); // false
-isValidCPF('11144477735');    // true
-isValidCPF('111.444.777-35'); // true
-\`\`\`
+```ts
+import { isCNPJValid } from '@thalonbr/docbr'
 
-### ✅ Validar CNPJ
+const cnpj = '11.222.333/0001-81'
 
-\`\`\`ts
-isCNPJValid('11222333000181');           // true
-isCNPJValid('11.222.333/0001-81');       // true
-isCNPJValid('AB122333000181');           // true (desde que dígitos verificadores sejam válidos)
-\`\`\`
+console.log(isCNPJValid(cnpj)) // true ou false, dependendo do CNPJ
+```
 
----
+### ✅ Validação de CNPJ com letras (Alfanumérico)
 
-## 📘 Assinaturas das funções
+```ts
+import { isCNPJValid } from '@thalonbr/docbr'
 
-### \`isValidCPF(cpf: string): boolean\`
+const cnpjAlfanumerico = 'AB1222333000181' // 14 caracteres, letras são convertidas via algoritmo da Receita
 
-Valida CPFs com ou sem pontuação. Ex:
+console.log(isCNPJValid(cnpjAlfanumerico)) // true ou false, com base no DV calculado
+```
 
-- \`'123.456.789-09'\`
-- \`'11144477735'\`
+### 🔍 Preenchimento com zeros à esquerda (automático)
 
-Regras:
-- Aceita CPF incompleto e preenche com zeros à esquerda.
-- Rejeita CPFs com todos os dígitos repetidos.
-- Calcula e valida os dois dígitos verificadores.
+```ts
+import { isValidCPF, isCNPJValid } from '@thalonbr/docbr'
+
+console.log(isValidCPF('123456789')) // false, mas tenta validar com zeros à esquerda
+console.log(isCNPJValid('112223330001')) // idem
+```
 
 ---
 
-### \`isCNPJValid(cnpj: string): boolean\`
+## 🧠 Como funciona
 
-Valida CNPJs com ou sem pontuação, inclusive alfanuméricos. Ex:
-
-- \`'11.222.333/0001-81'\`
-- \`'11222333000181'\`
-- \`'AB122333000181'\`
-
-Regras:
-- Remove pontuações e símbolos.
-- Aceita valores alfanuméricos (compatível com 2026).
-- Preenche com zeros à esquerda se necessário.
-- Calcula os dois dígitos verificadores com base nos 12 primeiros caracteres.
+A biblioteca aplica os **algoritmos oficiais da Receita Federal** para cálculo dos dígitos verificadores de CPF e CNPJ.  
+Para CNPJ alfanumérico, convertemos letras para valores numéricos com base na tabela de substituição da Receita, garantindo compatibilidade futura.
 
 ---
 
-## 🧪 Exemplos reais
+## 📌 Aviso Importante
 
-\`\`\`ts
-isValidCPF('529.982.247-25'); // true
-isValidCPF('111.111.111-11'); // false
-
-isCNPJValid('04.252.011/0001-10'); // true
-isCNPJValid('AB123456000100');     // false (dígitos inválidos)
-\`\`\`
+> A Receita Federal anunciou que, **a partir de 26 de julho de 2026**, **novos CNPJs poderão conter letras** em sua composição.  
+>  
+> A biblioteca `@thalonbr/docbr` já está **100% preparada** para lidar com esse novo formato.  
+> **Você pode validar CNPJs alfanuméricos com segurança desde já.**
 
 ---
 
-## 📂 Estrutura do Projeto
+## 📦 API
 
-\`\`\`
-@thalonbr/docbr
-├── src/
-│   ├── isValidCPF.ts
-│   ├── isCNPJValid.ts
-│   └── utils/
-│       └── string.utils.ts
-├── dist/
-├── package.json
-├── tsconfig.json
-└── README.md
-\`\`\`
+### `isValidCPF(cpf: string): boolean`
+
+Valida um CPF com ou sem formatação.
+
+- `cpf`: CPF em string, com ou sem pontuação (ex: `'123.456.789-09'` ou `'12345678909'`)
+- Retorna `true` se válido, senão `false`
+- Lança erro se o valor for vazio ou nulo
 
 ---
 
-## 🛠️ Tecnologias
+### `isCNPJValid(cnpj: string): boolean`
 
-- Node.js
-- TypeScript
-- Regex + cálculo de dígitos verificadores
-- Sem dependências externas
+Valida um CNPJ com ou sem formatação. Suporta letras (formato 2026+).
 
----
-
-## 🪪 Licença
-
-Este projeto é licenciado sob a [MIT License](LICENSE).
+- `cnpj`: CNPJ em string, com ou sem pontuação (ex: `'12.345.678/0001-90'`, `'12345678000190'` ou `'AB345678000190'`)
+- Retorna `true` se válido, senão `false`
+- Lança erro se o valor for vazio ou nulo
 
 ---
 
-## 👨‍💻 Autor
+## 🧪 Testes
 
-Feito com 💛 por [@thalonbr](https://github.com/thalonbr)
+Você pode rodar testes unitários com:
+
+```bash
+npm test
+```
+
+---
+
+## 🤝 Contribuições
+
+Contribuições são super bem-vindas!  
+Sinta-se à vontade para abrir issues, sugerir melhorias ou enviar PRs.
+
+---
+
+## 📄 Licença
+
+MIT © [Thalon Brito](https://github.com/thalonbr)
+
+---
+
+## 💡 Exemplo real de uso
+
+```ts
+import { isValidCPF, isCNPJValid } from '@thalonbr/docbr'
+
+const users = [
+  { name: 'Carlos', cpf: '11144477735' },
+  { name: 'Empresa ABC', cnpj: 'AB1222333000181' }
+]
+
+users.forEach(user => {
+  if (user.cpf && !isValidCPF(user.cpf)) {
+    console.log(`CPF inválido: ${user.name}`)
+  }
+
+  if (user.cnpj && !isCNPJValid(user.cnpj)) {
+    console.log(`CNPJ inválido: ${user.name}`)
+  }
+})
+```
+
+---
+
+**Feito com 💙 para garantir que seus dados estejam sempre corretos.**
